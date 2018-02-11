@@ -34,7 +34,23 @@ attachShader p s = OpenGL.attachShader p s
 
 --attribLocation :: OpenGL.Program -> String
 attribLocation program string = OpenGL.attribLocation program string $= OpenGL.AttribLocation 0
+
+
+
+
+-- glLinkProgram links the program object specified by program. If any shader objects of type GL_VERTEX_SHADER are attached to
+-- program, they will be used to create an executable that will run on the programmable vertex processor. If any shader objects of 
+-- type GL_GEOMETRY_SHADER are attached to program, they will be used to create an executable that will run on the programmable 
+-- geometry processor. If any shader objects of type GL_FRAGMENT_SHADER are attached to program, they will be used to create an 
+-- executable that will run on the programmable fragment processor.
+OpenGL.linkProgram :: Program -> IO ()
+
+
 linkOk <- OpenGL.get $ OpenGL.linkStatus program
+
+
+
+
 OpenGL.validateProgram program
 OpenGL.currentProgram $= Just program -- is that glUseProgram?
 
