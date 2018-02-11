@@ -1,6 +1,8 @@
 #version 120
 
-int main 
+attribute vec3 position;
+
+void main 
 {
-    printf("success")
+    gl_Position = vec4(position, 1.0);
 }

@@ -29,7 +29,7 @@ library:
     - OpenGL
 
 executables:
-  openGL-exe:
+  openGL:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
