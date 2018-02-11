@@ -1,5 +1,8 @@
 # openGL
 
+This is a graphics engine, using the OpenGL bindings, written in Haskell. 
+
+This is currently a work in progress and an exercise for learning, though I hope one day to make it into something moderately useful and/or interesting.
 
 ## OpenGL
 
