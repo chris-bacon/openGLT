@@ -1,5 +1,12 @@
 module Shaders.Shader where
 
+-- ✓ createProgram
+-- ✓ createShader
+-- ✓ attachShader
+-- ✓ attribLocation
+-- ✓ linkProgram
+-- ✓ validateProgram
+
 import qualified Graphics.Rendering.OpenGL as OpenGL
 import qualified Graphics.UI.GLUT as Glut
 
@@ -30,73 +37,33 @@ createShader shaderType shaderText = do
 attachShader :: OpenGL.Program -> OpenGL.Shader -> IO ()
 attachShader p s = OpenGL.attachShader p s
 
-
-
+-- glBindAttribLocation is used to associate a user-defined attribute variable in the program object specified by program with a
+-- generic vertex attribute index. The name of the user-defined attribute variable is passed as a null terminated string in name. 
+-- The generic vertex attribute index to be bound to this variable is specified by index. When program is made part of current 
+-- state, values provided via the generic vertex attribute index will modify the value of the user-defined attribute variable 
+-- specified by name.
+-- Attribute bindings do not go into effect until glLinkProgram is called. After a program object has been linked successfully, 
+-- the index values for generic attributes remain fixed (and their values can be queried) until the next link command occurs.
 --attribLocation :: OpenGL.Program -> String
 attribLocation program string = OpenGL.attribLocation program string $= OpenGL.AttribLocation 0
-
-
-
 
 -- glLinkProgram links the program object specified by program. If any shader objects of type GL_VERTEX_SHADER are attached to
 -- program, they will be used to create an executable that will run on the programmable vertex processor. If any shader objects of 
 -- type GL_GEOMETRY_SHADER are attached to program, they will be used to create an executable that will run on the programmable 
 -- geometry processor. If any shader objects of type GL_FRAGMENT_SHADER are attached to program, they will be used to create an 
 -- executable that will run on the programmable fragment processor.
-OpenGL.linkProgram :: Program -> IO ()
-
-
-linkOk <- OpenGL.get $ OpenGL.linkStatus program
-
-
+link :: OpenGL.Program -> IO ()
+link = OpenGL.linkProgram
 
 -- glValidateProgram checks to see whether the executables contained in program can execute given the current OpenGL state
 -- https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml
-OpenGL.validateProgram program
+-- checkProgram :: OpenGL.Program
+checkProgram = do
+    linkOk <- OpenGL.get $ OpenGL.linkStatus program
+    OpenGL.validateProgram program
 
-OpenGL.currentProgram $= Just program -- is this glUseProgram?
-
--- ✓ createProgram
--- ✓ createShader
--- ✓ attachShader
--- attribLocation
--- linkProgram
--- validateProgram
-
--- m_program = glCreateProgram():
--- m_shaders[0] = CreateShader(LoadShader(fileName + ".vs"), GL_VERTEX_SHADER)
--- m_shaders[1] = CreateShader(LoadShader(fileName + ".fs"), GL_FRAGMENT_SHADER)
---
--- for (unsigned int = 0; i < NUM_SHADERS; i++)
---     glAttachShader(m_program, m_shaders[i];
---
--- glBindAttribLocation(m_program, 0, "position");  -- binds something called position in the vertex shader
---
--- glLinkProgram(m_program);
---
--- glValidateProgram(m_program);
-
-
--- Bind()
--- {
---    glUseProgram(m_program)
--- }
-
--- CreateShader(text, shaderType)
--- {
---    GLuint shader = glCreateShader(shaderType);
---    
---    if (shader == 0)
---        std::ceer << "Error: shader creation failed" << std::endl;
---
---    shaderSourceStrings[0] = text.c_str();
---    shaderSourceStringsLengths[0] = text.length();
---
---    glShaderSource(shader, 1, shaderSourceStrings, sourceStringsLengths) -- send code to gpu
---    glCompileShader(shader);
---
---    return shader;
--- }
+-- useProgram :: OpenGL.Program -> 
+useProgram = OpenGL.currentProgram $= Just program -- is this glUseProgram?
 
 -- TODO: Write exception handling for this - when FilePath is not found
 loadShader :: FilePath -> IO String
