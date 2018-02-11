@@ -51,9 +51,10 @@ linkOk <- OpenGL.get $ OpenGL.linkStatus program
 
 
 -- glValidateProgram checks to see whether the executables contained in program can execute given the current OpenGL state
+-- https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml
 OpenGL.validateProgram program
 
-OpenGL.currentProgram $= Just program -- is that glUseProgram?
+OpenGL.currentProgram $= Just program -- is this glUseProgram?
 
 -- ✓ createProgram
 -- ✓ createShader
