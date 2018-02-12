@@ -21,11 +21,10 @@ title = "OpenGL Intro"
 
 main :: IO ()
 main = do
-    Display.init
+    Display.init (Display.WindowSize 400 400)
     win <- Glut.createWindow title
-    print $ "Window name: " ++ (show win)
+    putStrLn $ "Window name: " ++ (show win)
     Glut.displayCallback Glut.$= Display.update 
     Glut.keyboardMouseCallback Glut.$= Just Keyboard.handleKeyboardMouse
     Glut.mainLoop
-    print "success"
 

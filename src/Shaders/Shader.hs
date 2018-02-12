@@ -9,9 +9,28 @@ module Shaders.Shader where
 
 import qualified Graphics.Rendering.OpenGL as OpenGL
 import qualified Graphics.UI.GLUT as Glut
+--import Data.ByteString hiding (readFile)
+
+data ShaderInfo filepath stype = ShaderInfo {
+    filepath :: FilePath,
+    stype :: OpenGL.ShaderType
+} deriving (Show)
 
 shaderTypes :: [OpenGL.ShaderType]
 shaderTypes = [OpenGL.VertexShader, OpenGL.FragmentShader]
+
+-- TODO do this for multiple shaderInfos
+--initShaderProgram :: [ShaderInfo] -> 
+initShaderProgram shaderInfo = do
+    program <- createProgram
+    shaderContent <- loadShader $ filepath shaderInfo
+    --shader <- makeShader (stype shaderInfo) (shaderContent :: ByteString)
+    --attachShader program shader
+    --linkProgram program
+    --checkProgram program
+    print program
+    print shaderContent
+--    print shader
 
 -- glCreateProgram creates an empty program object and returns a non-zero value by which it can be referenced. A program object 
 -- is an object to which shader objects can be attached. This provides a mechanism to specify the shader objects that will be 
@@ -23,11 +42,11 @@ createProgram = OpenGL.createProgram
 -- glShaderSource sets the source code in shader to the source code in the array of strings specified by string. 
 -- Any source code previously stored in the shader object is completely replaced.
 -- glCompileShader compiles the source code strings that have been stored in the shader object.
---createShader :: OpenGL.ShaderType -> String -> IO Shader
-createShader shaderType shaderText = do
+--makeShader :: OpenGL.ShaderType -> String -> IO OpenGL.Shader
+makeShader shaderType shaderText = do
     shader <- OpenGL.createShader shaderType
-    OpenGL.shaderSourceBS shader Glut.$= shaderText -- glShaderSource
-    OpenGL.compileShader shader -- glCompileShader
+    OpenGL.shaderSourceBS shader Glut.$= shaderText
+    OpenGL.compileShader shader
     return shader
 
 -- In order to create a complete shader program, there must be a way to specify the list of things that will be linked together. 
@@ -52,19 +71,19 @@ attribLocation program string = OpenGL.attribLocation program string Glut.$= Ope
 -- type GL_GEOMETRY_SHADER are attached to program, they will be used to create an executable that will run on the programmable 
 -- geometry processor. If any shader objects of type GL_FRAGMENT_SHADER are attached to program, they will be used to create an 
 -- executable that will run on the programmable fragment processor.
-link :: OpenGL.Program -> IO ()
-link = OpenGL.linkProgram
+linkProgram :: OpenGL.Program -> IO ()
+linkProgram = OpenGL.linkProgram
 
 -- glValidateProgram checks to see whether the executables contained in program can execute given the current OpenGL state
 -- https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml
--- checkProgram :: OpenGL.Program
+checkProgram :: OpenGL.Program -> IO ()
 checkProgram program = do
     linkOk <- OpenGL.get $ OpenGL.linkStatus program
     OpenGL.validateProgram program
 
--- useProgram :: OpenGL.Program -> 
 useProgram program = OpenGL.currentProgram Glut.$= Just program -- is this glUseProgram?
 
 -- TODO: Write exception handling for this - when FilePath is not found
 loadShader :: FilePath -> IO String
 loadShader file = readFile file
+
