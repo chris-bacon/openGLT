@@ -45,7 +45,7 @@ attachShader p s = OpenGL.attachShader p s
 -- Attribute bindings do not go into effect until glLinkProgram is called. After a program object has been linked successfully, 
 -- the index values for generic attributes remain fixed (and their values can be queried) until the next link command occurs.
 --attribLocation :: OpenGL.Program -> String
-attribLocation program string = OpenGL.attribLocation program string $= OpenGL.AttribLocation 0
+attribLocation program string = OpenGL.attribLocation program string Glut.$= OpenGL.AttribLocation 0
 
 -- glLinkProgram links the program object specified by program. If any shader objects of type GL_VERTEX_SHADER are attached to
 -- program, they will be used to create an executable that will run on the programmable vertex processor. If any shader objects of 
@@ -58,12 +58,12 @@ link = OpenGL.linkProgram
 -- glValidateProgram checks to see whether the executables contained in program can execute given the current OpenGL state
 -- https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml
 -- checkProgram :: OpenGL.Program
-checkProgram = do
+checkProgram program = do
     linkOk <- OpenGL.get $ OpenGL.linkStatus program
     OpenGL.validateProgram program
 
 -- useProgram :: OpenGL.Program -> 
-useProgram = OpenGL.currentProgram $= Just program -- is this glUseProgram?
+useProgram program = OpenGL.currentProgram Glut.$= Just program -- is this glUseProgram?
 
 -- TODO: Write exception handling for this - when FilePath is not found
 loadShader :: FilePath -> IO String
