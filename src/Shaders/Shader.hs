@@ -7,14 +7,11 @@ module Shaders.Shader where
 -- ✓ linkProgram
 -- ✓ validateProgram
 
+import Shaders.Types
+
 import qualified Graphics.Rendering.OpenGL as OpenGL
 import qualified Graphics.UI.GLUT as Glut
 --import Data.ByteString hiding (readFile)
-
-data ShaderInfo filepath stype = ShaderInfo {
-    filepath :: FilePath,
-    stype :: OpenGL.ShaderType
-} deriving (Show)
 
 shaderTypes :: [OpenGL.ShaderType]
 shaderTypes = [OpenGL.VertexShader, OpenGL.FragmentShader]

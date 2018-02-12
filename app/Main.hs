@@ -1,6 +1,7 @@
 module Main where
 
-import qualified Display as Display
+import qualified Display.Display as Display
+import qualified Display.Types as Display
 import qualified Shaders.Shader as Shader
 import qualified Control.Keyboard as Keyboard
 

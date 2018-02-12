@@ -1,13 +1,9 @@
-module Display where
+module Display.Display where
 
-import qualified Graphics.UI.GLUT as Glut
-
+import Display.Types
 import Shaders.Shader
 
-data WindowSize x y = WindowSize {
-    x :: Glut.GLsizei,
-    y :: Glut.GLsizei
-} deriving (Show)
+import qualified Graphics.UI.GLUT as Glut
 
 update :: Glut.DisplayCallback
 update = do
