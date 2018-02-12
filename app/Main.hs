@@ -19,9 +19,12 @@ fragmentShaderPath = "shaders/basicShader.fs" -- hardcoded for now
 title :: Title
 title = "OpenGL Intro"
 
+wsize :: Display.WindowSize x y
+wsize = Display.WindowSize 400 400
+
 main :: IO ()
 main = do
-    Display.init (Display.WindowSize 400 400)
+    Display.init wsize
     win <- Glut.createWindow title
     putStrLn $ "Window name: " ++ (show win)
     Glut.displayCallback Glut.$= Display.update 
