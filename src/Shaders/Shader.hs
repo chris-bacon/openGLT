@@ -25,6 +25,7 @@ initShaderProgram shaderInfo = do
     --attachShader program shader
     --linkProgram program
     --checkProgram program
+    -- useProgram program
     print program
     print shaderContent
 --    print shader
