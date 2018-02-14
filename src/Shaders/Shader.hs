@@ -11,23 +11,26 @@ import Shaders.Types
 
 import qualified Graphics.Rendering.OpenGL as OpenGL
 import qualified Graphics.UI.GLUT as Glut
---import Data.ByteString hiding (readFile)
+import qualified Data.ByteString as BS
 
 shaderTypes :: [OpenGL.ShaderType]
 shaderTypes = [OpenGL.VertexShader, OpenGL.FragmentShader]
 
--- TODO do this for multiple shaderInfos
---initShaderProgram :: [ShaderInfo] -> 
-initShaderProgram shaderInfo = do
-    program <- createProgram
-    shaderContent <- loadShader $ filepath shaderInfo
-    --shader <- makeShader (stype shaderInfo) (shaderContent :: ByteString)
-    --attachShader program shader
-    --linkProgram program
-    --checkProgram program
+-- TODO Why are shader and program returning zero values?
+initShaderProgram :: [ShaderInfo a b] -> OpenGL.Program -> IO ()
+initShaderProgram [] _ = return ()
+initShaderProgram (sInfo:sInfos) program = do
+    shaderContent <- loadShader $ filepath sInfo
+    shaderRef <- makeShader (stype sInfo) shaderContent
+    --attribLocation program ""
+    attachShader program shaderRef
+    linkProgram program
+    checkProgram program
+    useProgram program
     print program
     print shaderContent
---    print shader
+    print shaderRef
+    initShaderProgram (sInfos)
 
 -- glCreateProgram creates an empty program object and returns a non-zero value by which it can be referenced. A program object 
 -- is an object to which shader objects can be attached. This provides a mechanism to specify the shader objects that will be 
@@ -73,14 +76,18 @@ linkProgram = OpenGL.linkProgram
 
 -- glValidateProgram checks to see whether the executables contained in program can execute given the current OpenGL state
 -- https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glValidateProgram.xhtml
-checkProgram :: OpenGL.Program -> IO ()
+--checkProgram :: OpenGL.Program -> Maybe Bool
 checkProgram program = do
     linkOk <- OpenGL.get $ OpenGL.linkStatus program
-    OpenGL.validateProgram program
+    x <- OpenGL.validateProgram program
+    print x -- returns () atm, should it when all is well?
+    case linkOk of
+        False -> print LinkNotOkay 
+        _ -> print True
 
 useProgram program = OpenGL.currentProgram Glut.$= Just program -- is this glUseProgram?
 
 -- TODO: Write exception handling for this - when FilePath is not found
-loadShader :: FilePath -> IO String
-loadShader file = readFile file
+loadShader :: FilePath -> IO BS.ByteString 
+loadShader file = BS.readFile file
 

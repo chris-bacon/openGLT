@@ -27,6 +27,7 @@ library:
   dependencies:
     - GLUT
     - OpenGL
+    - bytestring
 
 executables:
   openGL:
