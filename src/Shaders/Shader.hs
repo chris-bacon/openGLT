@@ -16,10 +16,8 @@ import qualified Data.ByteString as BS
 shaderTypes :: [OpenGL.ShaderType]
 shaderTypes = [OpenGL.VertexShader, OpenGL.FragmentShader]
 
--- TODO Why are shader and program returning zero values?
-initShaderProgram :: [ShaderInfo a b] -> OpenGL.Program -> IO ()
-initShaderProgram [] _ = return ()
-initShaderProgram (sInfo:sInfos) program = do
+initShaderProgram :: ShaderInfo a b -> OpenGL.Program -> IO ()
+initShaderProgram sInfo program = do
     shaderContent <- loadShader $ filepath sInfo
     shaderRef <- makeShader (stype sInfo) shaderContent
     --attribLocation program ""
@@ -27,10 +25,8 @@ initShaderProgram (sInfo:sInfos) program = do
     linkProgram program
     checkProgram program
     useProgram program
+    putStr "Dealing with program: "
     print program
-    print shaderContent
-    print shaderRef
-    initShaderProgram (sInfos)
 
 -- glCreateProgram creates an empty program object and returns a non-zero value by which it can be referenced. A program object 
 -- is an object to which shader objects can be attached. This provides a mechanism to specify the shader objects that will be 
@@ -80,10 +76,14 @@ linkProgram = OpenGL.linkProgram
 checkProgram program = do
     linkOk <- OpenGL.get $ OpenGL.linkStatus program
     x <- OpenGL.validateProgram program
-    print x -- returns () atm, should it when all is well?
+    status <- OpenGL.get $ OpenGL.validateStatus program
+    print status
+    case status of
+        False -> print ValidateStatusNotOK
+        _ -> print ValidateStatusOK
     case linkOk of
-        False -> print LinkNotOkay 
-        _ -> print True
+        False -> print LinkNotOK
+        _ -> print LinkOK
 
 useProgram program = OpenGL.currentProgram Glut.$= Just program -- is this glUseProgram?
 

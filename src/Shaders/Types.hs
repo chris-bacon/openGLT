@@ -2,14 +2,16 @@ module Shaders.Types where
 
 import qualified Graphics.Rendering.OpenGL as OpenGL
 
-data ShaderInfo filepath stype = ShaderInfo {
+data ShaderInfo a b = ShaderInfo {
     filepath :: FilePath,
     stype :: OpenGL.ShaderType
 } deriving (Show)
 
-data ShaderErrors
-    = LinkNotOkay
+data ShaderStatus
+    = LinkNotOK
+    | LinkOK
     | ProgramNotValid
-    | CannotReadShaderFile 
+    | CannotReadShaderFile
+    | ValidateStatusNotOK
+    | ValidateStatusOK
     deriving (Show)
-

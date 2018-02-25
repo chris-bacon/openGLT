@@ -3,6 +3,7 @@ module Main where
 import qualified Display.Display as Display
 import qualified Display.Types as Display
 import qualified Shaders.Shader as Shader
+import qualified Shaders.Types as ShaderTypes
 import qualified Control.Keyboard as Keyboard
 
 import Control.Monad
@@ -28,6 +29,10 @@ main = do
     Display.init wsize
     win <- Glut.createWindow title
     putStrLn $ "Window name: " ++ (show win)
+    p <- Shader.createProgram
+    putStr "Dealing with program: "
+    print p
+    Shader.initShaderProgram (ShaderTypes.ShaderInfo vertexShaderPath OpenGL.VertexShader) p
     Glut.displayCallback Glut.$= Display.update 
     Glut.keyboardMouseCallback Glut.$= Just Keyboard.handleKeyboardMouse
     Glut.mainLoop
