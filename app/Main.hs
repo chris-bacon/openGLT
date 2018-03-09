@@ -16,7 +16,7 @@ vertexShaderPath :: FilePath
 vertexShaderPath = "shaders/basicShader.vs" -- hardcoded for now
 
 fragmentShaderPath :: FilePath
-fragmentShaderPath = "shaders/basicShader.fs" -- hardcoded for now
+fragmentShaderPath = "/home/chrisb/personal/haskell/openGLT/shaders/basicShader.fs" -- hardcoded for now
 
 title :: Title
 title = "OpenGL Intro"
@@ -32,7 +32,8 @@ main = do
     p <- Shader.createProgram
     putStr "Dealing with program: "
     print p
-    Shader.initShaderProgram (ShaderTypes.ShaderInfo vertexShaderPath OpenGL.VertexShader) p
+    print $ "Running: " ++ (show fragmentShaderPath)
+    Shader.initShaderProgram (ShaderTypes.ShaderInfo fragmentShaderPath OpenGL.VertexShader) p
     Glut.displayCallback Glut.$= Display.update 
     Glut.keyboardMouseCallback Glut.$= Just Keyboard.handleKeyboardMouse
     Glut.mainLoop
